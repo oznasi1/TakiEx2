@@ -262,7 +262,7 @@ function GameUI() {
     this.ShowColorPicker = function () {
         document.getElementById("colorPicker").style.display = "block";
     }
-
+    
     function HideColorPicker() {
         document.getElementById("colorPicker").style.display = "none";
     }

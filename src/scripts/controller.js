@@ -22,20 +22,37 @@ const NUM_OF_BOT = 1;
     var listener;
     var engine;
 
-    function updateByRef(){
+    function updateByRef(newShowError,newShowColorPicker){
         let newDeck = [];
         let newPile = [];
         let newBotCards = [];
         let newPlayerCards = [];
+        let newStats={};
         Object.assign(newDeck,engine.Deck.Cards);
         Object.assign(newBotCards,engine.Players.getPlayersList()[1].Cards);
         Object.assign(newPlayerCards,engine.Players.getPlayersList()[0].Cards);
         Object.assign(newPile,engine.Pile.Cards);
+        newStats={
+           numOfTurs:engine.Players.getPlayersList()[0].Stats.getNumOfTurns(), 
+           humanAvgTime:engine.Players.getPlayersList()[0].Stats.getAvgPlayTime(),
+           humanLastCardCount:engine.Players.getPlayersList()[0].Stats.getNumOfOneCard(),
+                } 
+
         listener.setState({deck: newDeck,
                            pile: newPile,
                            botCards: newBotCards,
-                           playerCards:newPlayerCards});
-    }
+                           playerCards:newPlayerCards,
+                           showError:newShowError,
+                           showColorPicker:newShowColorPicker,
+                           stats:newStats});
+
+        if(newShowError==true)
+            {
+                setTimeout(function() { 
+                    listener.setState({showError: false}) 
+                    }, 1000)
+            }
+        }
  
     function initGameEngine(){
         engine = new GameEngine();

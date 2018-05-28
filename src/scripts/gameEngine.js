@@ -33,7 +33,9 @@ class GameEngine{
         this.Players.init(this, this.Pile, this.Deck, i_NumberOfHuman, i_NumberOfBots); // 1 bot, 1 human
         this.ActionManager.init();
         //this.UI.Render(this.Deck, this.Pile, this.Players); //new
-        updateByRef();
+        let showError=false;
+        let showColorPicker = false;
+        updateByRef(showError,showColorPicker);
     }
 
     hasMoreCards(i_CurrPlayer) {
@@ -73,12 +75,14 @@ class GameEngine{
             currPlayer.addCard(cardFromDeck);
             this.Players.nextPlayerTurn();
             //this.UI.Render(this.Deck, this.Pile, this.Players);
-            updateByRef();
+            let showError=false;
+            let showColorPicker= false;
+            updateByRef(showError,showColorPicker);
             this.Players.startTurn();
     };
     
     getTimer(){
-        return s_gameTimer;
+        return this.s_gameTimer;
     }
     //info:
     //-1 = falid
@@ -92,11 +96,9 @@ class GameEngine{
             var cardIndex = event.target.id;
             this.CardClick(cardIndex);
         }
-
     };
 
     CardClick(i_CardIndex){
-
         this.startTurn(i_CardIndex);
         this.endTurn();
         this.update(); //deck cards = 1 =>> shffle + check winner losser
@@ -165,22 +167,26 @@ class GameEngine{
 
         //render end
         var turnResult = this.ActionManager.getTurnResult();
-
+        var showError =false;
+        var showColorPicker= false;
         switch (turnResult) {
             case -1:        //failed to add card to pile
-                this.UI.ShowError();
+                //this.UI.ShowError();
+                showError=true;
+                updateByRef(showError,showColorPicker);
                 break;
 
             case eGameState["normal"]: //render after player play and then change to next player
                 this.Players.nextPlayerTurn(); //add delay to the bot algo
                 //this.UI.Render(this.Deck, this.Pile, this.Players);
-                updateByRef();
+                updateByRef(showError,showColorPicker);
                 break;
 
             case eGameState["change_colorful"]:  //user or bot need to pick color
                 //this.UI.Render(this.Deck, this.Pile, this.Players);
-                updateByRef();
-                this.UI.ShowColorPicker();
+                showColorPicker=true;
+                updateByRef(showError,showColorPicker);
+                //this.UI.ShowColorPicker();
                 break;
 
             case eGameState["taki"]:
@@ -189,12 +195,12 @@ class GameEngine{
                     this.ActionManager.setDefaultState();
                     this.Players.nextPlayerTurn();
                     //this.UI.Render(this.Deck, this.Pile, this.Players);
-                    updateByRef();
+                    updateByRef(showError,showColorPicker);
                 }
                 else{
                     this.Players.getCurrentPlayer().setPlayingToFalse();
                     //this.UI.Render(this.Deck, this.Pile, this.Players);
-                    updateByRef();
+                    updateByRef(showError,showColorPicker);
                 }
 
                 break;
@@ -202,10 +208,9 @@ class GameEngine{
             case eGameState["stop"]:
                 this.Players.nextPlayerTurn();
                 //this.UI.Render(this.Deck, this.Pile, this.Players);
-                updateByRef();
+                updateByRef(showError,showColorPicker);
                 this.Players.nextPlayerTurn();
                 this.ActionManager.setDefaultState();
-
                 break;
         }
 

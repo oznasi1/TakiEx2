@@ -42,7 +42,11 @@ function Stats() {
 
     this.getAvgPlayTime = function () {
         this.AvgPlayingTimePerTurn = s_TimePlaying / this.NumOfTurns;
-        return this.AvgPlayingTimePerTurn;
+        if(isNaN(this.AvgPlayingTimePerTurn))
+        {
+            this.AvgPlayingTimePerTurn=0;
+        }
+        return this.AvgPlayingTimePerTurn.toFixed(1);
     };
 
     this.getNumOfTurns = function(){
