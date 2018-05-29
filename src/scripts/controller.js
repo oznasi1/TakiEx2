@@ -4,23 +4,37 @@ import {GameEngine} from "./gameEngine.js";
 
 const NUM_OF_HUMAN = 1;
 const NUM_OF_BOT = 1;
-    // this.makeCardFaceUp = function () {
-    //     this.attributes[1] = this.cardAtrribute;
-    //     this.isUp = true;
-    // }
 
-    /*
-    function updateByRef(...keys){
-        let obj = {};
-        keys.forEach((key)=>{
-            Object.assign(obj[`${key}`],engine[`${key}`]);
-           })
 
-        listener.setState(obj);
-    }*/
 
     var listener;
     var engine;
+    var stateArr=[];
+    var currentIndex=-1;
+
+    function prevWasClicked(index){
+        let newState={};
+        if(index==0){
+            currentIndex=stateArr.length-1
+        }
+        else{
+            currentIndex--;
+        }
+        Object.assign(newState,stateArr[currentIndex]);
+
+        listener.setState(newState);
+    }
+
+    function nextWasClicked(index){
+        let newState={};
+        currentIndex=(++index)%stateArr.length;
+        Object.assign(newState,stateArr[currentIndex]);
+        listener.setState(newState);
+    }
+
+    function saveStateInArry(currState){
+        stateArr.push(newState);
+    }
 
     function updateByRef(newShowError,newShowColorPicker,newEndGame){
         let newDeck = [];
@@ -30,6 +44,9 @@ const NUM_OF_BOT = 1;
         let newStats={};
         let newBotStats={};
         let newWinLose={};
+        let newState={};
+        currentIndex++;
+        let newIndex=currentIndex;
         Object.assign(newDeck,engine.Deck.Cards);
         Object.assign(newBotCards,engine.Players.getPlayersList()[1].Cards);
         Object.assign(newPlayerCards,engine.Players.getPlayersList()[0].Cards);
@@ -39,30 +56,37 @@ const NUM_OF_BOT = 1;
            avgTime:engine.Players.getPlayersList()[0].Stats.getAvgPlayTime(),
            lastCardCount:engine.Players.getPlayersList()[0].Stats.getNumOfOneCard(),
                 } 
+        if(newEndGame){ // if we got this flag that found the winner
+            newBotStats={
+                    numOfTurs:engine.Players.getPlayersList()[1].Stats.getNumOfTurns(), 
+                    avgTime:engine.Players.getPlayersList()[1].Stats.getAvgPlayTime(),
+                    lastCardCount:engine.Players.getPlayersList()[1].Stats.getNumOfOneCard(),
+                    } 
+            newWinLose={
+               timer:engine.getTimer(),
+               winnerIndex:engine.checkForWinner(),
+               botStats:newBotStats,
+            }
+        }
 
-                if(newEndGame) // if we got this flag that found the winner
-                {
-                    newBotStats={
-                        numOfTurs:engine.Players.getPlayersList()[1].Stats.getNumOfTurns(), 
-                        avgTime:engine.Players.getPlayersList()[1].Stats.getAvgPlayTime(),
-                        lastCardCount:engine.Players.getPlayersList()[1].Stats.getNumOfOneCard(),
-                             } 
-                    newWinLose={
-                        timer:engine.getTimer(),
-                        winnerIndex:engine.checkForWinner(),
-                        botStats:newBotStats,
-                    }
-                }
+        newState={
+            stateIndex:newIndex,
+            deck: newDeck,
+            pile: newPile,
+            botCards: newBotCards,
+            playerCards:newPlayerCards,
+            showError:newShowError,
+            showColorPicker:newShowColorPicker,
+            endGame:newEndGame,
+            stats:newStats,
+            winLose:newWinLose,
+            isRepaly:false}
 
-        listener.setState({deck: newDeck,
-                           pile: newPile,
-                           botCards: newBotCards,
-                           playerCards:newPlayerCards,
-                           showError:newShowError,
-                           showColorPicker:newShowColorPicker,
-                           endGame:newEndGame,
-                           stats:newStats,
-                           winLose:newWinLose});
+
+        //saveStateInArray(newState);
+        stateArr.push(newState);
+
+        listener.setState(newState);
 
         if(newShowError==true) // shuuting down ther error after 1 sec
             {
@@ -72,11 +96,12 @@ const NUM_OF_BOT = 1;
             }
         }
  
+        
     function initGameEngine(){
         engine = new GameEngine();
         engine.initEngine(null,NUM_OF_HUMAN,NUM_OF_BOT);
 
-        updateByRef();
+        //updateByRef();
     }
 
     function init (gameRef){
@@ -84,4 +109,4 @@ const NUM_OF_BOT = 1;
     }
 
 
-export {init,initGameEngine,updateByRef,engine};
+export {init,initGameEngine,updateByRef,engine,prevWasClicked,nextWasClicked};

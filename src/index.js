@@ -10,6 +10,8 @@ import {Deck} from "./scripts/deck.js";
 import {init} from "./scripts/controller.js";
 import {initGameEngine} from "./scripts/controller.js";
 import {engine} from "./scripts/controller.js";
+import {prevWasClicked} from "./scripts/controller.js";
+import {nextWasClicked} from "./scripts/controller.js";
 
 
 const GameMenu =(props)=> {
@@ -133,7 +135,7 @@ class Player extends React.Component{
                 cardsElems.push(<CardRC id={i} key={i} arrributes={`${cardAttributes} overLapCard`} style={cardStyle} onClick={this.handlePlayerClick}/>);
             }
             else{
-                cardsElems.push(<CardRC id={i} key={i} arrributes={`${cardAttributes} overLapCard`} style={cardStyle}/>);
+                cardsElems.push(<CardRC id={i} key={i} arrributes={`card card_back overLapCard`} style={cardStyle}/>);
             }
          }
 
@@ -210,8 +212,11 @@ class Game extends React.Component{ //contains all - players,deck,pile,stats
         super(args);
 
         this.colorPickerHandler = this.colorPickerHandler.bind(this)
+        this.handlePrevClick = this.handlePrevClick.bind(this);
+        this.handleNextClick = this.handleNextClick.bind(this);
 
         this.state = {
+            stateIndex:-1,
             botCards:[],
             deck: [],
             pile:[],
@@ -228,8 +233,19 @@ class Game extends React.Component{ //contains all - players,deck,pile,stats
                 timer:0,
                 winnerIndex:null,
                 botStats:null,
-            }
+            },
+            isReplay:false
         }
+    }
+
+    handlePrevClick(e){
+        this.setState({isReplay:true});
+        prevWasClicked(this.state.stateIndex);
+    }
+
+    handleNextClick(e){
+        this.setState({isReplay:true});
+        nextWasClicked(this.state.stateIndex);
     }
 
     colorPickerHandler(e){
@@ -245,15 +261,32 @@ class Game extends React.Component{ //contains all - players,deck,pile,stats
     render(){
         if(!this.state.endGame)
         {
-            return(
-                <div id="gameWrapper" >
-                    <Player id="bot" cards={this.state.botCards}/>
-                    <DeckRC cards={this.state.deck}/>
-                    <PileRC cards={this.state.pile} toShowError={this.state.showError} toShowColorPicker={this.state.showColorPicker} handler ={this.props.colorPickerHandler}/>
-                    <Player id="player" cards={this.state.playerCards}/>
-                    <Stats id="player" stat={this.state.stats}/>
-                </div>
-            );
+            if(this.state.isReplay)
+            {
+                return(
+                    <div id="gameWrapper" >
+                     <div id="prevNextButtons">
+                            <button id="prev" onClick={this.handlePrevClick}>Previos move</button>
+                            <button id="next" onClick={this.handleNextClick}>Next move</button>
+                        </div>
+                        <Player id="bot" cards={this.state.botCards}/>
+                        <DeckRC cards={this.state.deck}/>
+                        <PileRC cards={this.state.pile} toShowError={this.state.showError} toShowColorPicker={this.state.showColorPicker} handler ={this.props.colorPickerHandler}/>
+                        <Player id="player" cards={this.state.playerCards}/>
+                        <Stats id="player" stat={this.state.stats}/>
+                    </div>
+                );
+            }else{
+                return(
+                    <div id="gameWrapper" >
+                        <Player id="bot" cards={this.state.botCards}/>
+                        <DeckRC cards={this.state.deck}/>
+                        <PileRC cards={this.state.pile} toShowError={this.state.showError} toShowColorPicker={this.state.showColorPicker} handler ={this.props.colorPickerHandler}/>
+                        <Player id="player" cards={this.state.playerCards}/>
+                        <Stats id="player" stat={this.state.stats}/>
+                    </div>
+                );
+            }
         }
         else{
             var whoWon;
@@ -266,11 +299,12 @@ class Game extends React.Component{ //contains all - players,deck,pile,stats
             return(
                 <div id="winLose">
                     <div id="youLostOrWon">{whoWon}</div>
+                    <div id="timer">{this.state.winLose.timer}</div>
                     <Stats id="player" stat={this.state.stats}/>
                     <Stats id="bot" stat={this.state.winLose.botStats}/>
                         <div id="prevNextButtons">
-                            <button id="prev">Previos move</button>
-                            <button id="next">Next move</button>
+                            <button id="prev" onClick={this.handlePrevClick}>Previos move</button>
+                            <button id="next" onClick={this.handleNextClick}>Next move</button>
                         </div>
                 </div>
             );
@@ -279,7 +313,6 @@ class Game extends React.Component{ //contains all - players,deck,pile,stats
 }
 
 ReactDOM.render(<GameMenu />,document.getElementById("root"));
-
 
 function startGame()
 {
