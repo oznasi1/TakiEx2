@@ -49,13 +49,27 @@ const ShowError = (props)=>{
     );
 };
 const Stats = (props)=>{
+    var attribute;
+    if(props.id=="player"){
+        attribute="playerTurn";
+    }
+    else {
+        attribute="botTurn";
+    }
     return(
         <div id="stats">
-            <img className={"playerTurn"}/>
-            <div id="numTurns">Number player turns: {props.stat.numOfTurs}</div>
-            <div id="Human_avg_time">Average time per turn: {props.stat.humanAvgTime} seconds</div>
-            <div id ="Human_last_one">Number of last card of player: {props.stat.humanLastCardCount}</div>
+                <div id={props.id}>
+                     <img className={attribute}/>
+                     <div id="numTurns">Number of turns: {props.stat.numOfTurs}</div>
+                    <div id="avg_time">Average time per turn: {props.stat.avgTime} seconds</div>
+                     <div id ="last_one">Number of last card: {props.stat.lastCardCount}</div>
+                 </div>
         </div>
+    );
+};
+const EndGameWinLose = (props)=>{
+    return(
+        <div></div>
     );
 };
 
@@ -94,7 +108,6 @@ class PicColor extends React.Component{
          );
     }
 }
-
 
 class Player extends React.Component{
     constructor(args){
@@ -205,10 +218,16 @@ class Game extends React.Component{ //contains all - players,deck,pile,stats
             playerCards:[],
             showError: false,
             showColorPicker:false,
+            endGame:false,
             stats: {
                 numOfTurs:0,
-                humanAvgTime:0,
-                humanLastCardCount:0,
+                avgTime:0,
+                lastCardCount:0,
+            },
+            winLose:{
+                timer:0,
+                winnerIndex:null,
+                botStats:null,
             }
         }
     }
@@ -224,17 +243,38 @@ class Game extends React.Component{ //contains all - players,deck,pile,stats
     }
 
     render(){
-
-        return(
-            <div id="gameWrapper" >
-                <Player id="bot" cards={this.state.botCards}/>
-                <DeckRC cards={this.state.deck}/>
-                <PileRC cards={this.state.pile} toShowError={this.state.showError} toShowColorPicker={this.state.showColorPicker} handler ={this.props.colorPickerHandler}/>
-                <Player id="player" cards={this.state.playerCards}/>
-                <Stats stat={this.state.stats}/>
-
-            </div>
-        );
+        if(!this.state.endGame)
+        {
+            return(
+                <div id="gameWrapper" >
+                    <Player id="bot" cards={this.state.botCards}/>
+                    <DeckRC cards={this.state.deck}/>
+                    <PileRC cards={this.state.pile} toShowError={this.state.showError} toShowColorPicker={this.state.showColorPicker} handler ={this.props.colorPickerHandler}/>
+                    <Player id="player" cards={this.state.playerCards}/>
+                    <Stats id="player" stat={this.state.stats}/>
+                </div>
+            );
+        }
+        else{
+            var whoWon;
+            if(this.state.winLose.winnerIndex==0){
+                 whoWon = "You won!!!";
+            }
+            else{
+                 whoWon = "You lost!!!";
+            }
+            return(
+                <div id="winLose">
+                    <div id="youLostOrWon">{whoWon}</div>
+                    <Stats id="player" stat={this.state.stats}/>
+                    <Stats id="bot" stat={this.state.winLose.botStats}/>
+                        <div id="prevNextButtons">
+                            <button id="prev">Previos move</button>
+                            <button id="next">Next move</button>
+                        </div>
+                </div>
+            );
+        }
     }
 }
 
