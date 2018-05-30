@@ -13,6 +13,10 @@ const NUM_OF_BOT = 1;
     var stateArr=[];
     var currentIndex=-1;
 
+    function cleanStateArray(){
+        stateArr=[];
+    }
+
     function prevWasClicked(index){
         let newState={};
         if(index==0){
@@ -83,8 +87,6 @@ const NUM_OF_BOT = 1;
             winLose:newWinLose,
             isRepaly:false}
 
-
-        //saveStateInArray(newState);
         stateArr.push(newState);
 
         listener.setState(newState);
@@ -101,8 +103,7 @@ const NUM_OF_BOT = 1;
     function initGameEngine(){
         engine = new GameEngine();
         engine.initEngine(null,NUM_OF_HUMAN,NUM_OF_BOT);
-
-        //updateByRef();
+        //updateByRef(false,false,false);
     }
 
     function init (gameRef){
@@ -110,4 +111,4 @@ const NUM_OF_BOT = 1;
     }
 
 
-export {init,initGameEngine,updateByRef,engine,prevWasClicked,nextWasClicked};
+export {init,initGameEngine,updateByRef,engine,prevWasClicked,nextWasClicked,cleanStateArray};

@@ -12,6 +12,7 @@ import {initGameEngine} from "./scripts/controller.js";
 import {engine} from "./scripts/controller.js";
 import {prevWasClicked} from "./scripts/controller.js";
 import {nextWasClicked} from "./scripts/controller.js";
+import {cleanStateArray} from "./scripts/controller.js";
 
 
 const GameMenu =(props)=> {
@@ -215,6 +216,7 @@ class Game extends React.Component{ //contains all - players,deck,pile,stats
         this.handlePrevClick = this.handlePrevClick.bind(this);
         this.handleNextClick = this.handleNextClick.bind(this);
         this.handleReplay = this.handleReplay.bind(this);
+        this.handleRestart = this.handleRestart.bind(this);
 
 
         this.state = {
@@ -238,6 +240,11 @@ class Game extends React.Component{ //contains all - players,deck,pile,stats
             },
             isReplay:false
         }
+    }
+    handleRestart(e){
+        this.setState({isReplay:false,endGame:false});
+        cleanStateArray();
+        initGameEngine();
     }
 
     handleReplay(e){
@@ -275,6 +282,7 @@ class Game extends React.Component{ //contains all - players,deck,pile,stats
                      <div id="prevNextButtons">
                             <button id="prev" onClick={this.handlePrevClick}>Previos move</button>
                             <button id="next" onClick={this.handleNextClick}>Next move</button>
+                            <button id="restart" onClick={this.handleRestart}>Restart</button>
                         </div>
                         <Player id="bot" cards={this.state.botCards}/>
                         <DeckRC cards={this.state.deck}/>
@@ -311,12 +319,15 @@ class Game extends React.Component{ //contains all - players,deck,pile,stats
                     <Stats id="bot" stat={this.state.winLose.botStats}/>
                         <div id="prevNextButtons">
                             <button id="replay" onClick={this.handleReplay}>Replay</button>
+                            <button id="restart" onClick={this.handleRestart}>Restart</button>
                         </div>
                 </div>
             );
         }
     }
 }
+
+
 
 ReactDOM.render(<GameMenu />,document.getElementById("root"));
 
