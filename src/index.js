@@ -214,6 +214,8 @@ class Game extends React.Component{ //contains all - players,deck,pile,stats
         this.colorPickerHandler = this.colorPickerHandler.bind(this)
         this.handlePrevClick = this.handlePrevClick.bind(this);
         this.handleNextClick = this.handleNextClick.bind(this);
+        this.handleReplay = this.handleReplay.bind(this);
+
 
         this.state = {
             stateIndex:-1,
@@ -238,6 +240,11 @@ class Game extends React.Component{ //contains all - players,deck,pile,stats
         }
     }
 
+    handleReplay(e){
+        this.setState({isReplay:true});
+        nextWasClicked(this.state.stateIndex);
+    }
+
     handlePrevClick(e){
         this.setState({isReplay:true});
         prevWasClicked(this.state.stateIndex);
@@ -258,7 +265,7 @@ class Game extends React.Component{ //contains all - players,deck,pile,stats
         initGameEngine();
     }
 
-    render(){
+    render(){   
         if(!this.state.endGame)
         {
             if(this.state.isReplay)
@@ -299,12 +306,11 @@ class Game extends React.Component{ //contains all - players,deck,pile,stats
             return(
                 <div id="winLose">
                     <div id="youLostOrWon">{whoWon}</div>
-                    <div id="timer">{this.state.winLose.timer}</div>
+                    <div id="timer">The game was {this.state.winLose.timer} seconds </div>
                     <Stats id="player" stat={this.state.stats}/>
                     <Stats id="bot" stat={this.state.winLose.botStats}/>
                         <div id="prevNextButtons">
-                            <button id="prev" onClick={this.handlePrevClick}>Previos move</button>
-                            <button id="next" onClick={this.handleNextClick}>Next move</button>
+                            <button id="replay" onClick={this.handleReplay}>Replay</button>
                         </div>
                 </div>
             );

@@ -1,6 +1,7 @@
 
 
 import {GameEngine} from "./gameEngine.js";
+import {s_gameTimer} from "./gameEngine.js";
 
 const NUM_OF_HUMAN = 1;
 const NUM_OF_BOT = 1;
@@ -63,7 +64,7 @@ const NUM_OF_BOT = 1;
                     lastCardCount:engine.Players.getPlayersList()[1].Stats.getNumOfOneCard(),
                     } 
             newWinLose={
-               timer:engine.getTimer(),
+               timer:s_gameTimer,
                winnerIndex:engine.checkForWinner(),
                botStats:newBotStats,
             }

@@ -5,6 +5,7 @@ import {Players} from './players.js';
 import {ActionManager} from './actionManager';
 import {updateByRef} from "../scripts/controller.js";
 var eGameState = { "normal": 0, "change_colorful": 1, "taki": 2, "stop": 3 };
+var s_gameTimer = 0;
 
 class GameEngine{
 
@@ -15,12 +16,12 @@ class GameEngine{
         this.Players = new Players();
         this.Pile = new Pile();
         this.ActionManager = new ActionManager(this.Pile);
-        this.s_gameTimer = 0;
+        
         this.timeInterval = null;
     }
 
     timer(){
-        this.s_gameTimer += 1;
+        s_gameTimer += 1;
     }
 
     initEngine(i_UI, i_NumberOfHuman, i_NumberOfBots) {
@@ -83,7 +84,7 @@ class GameEngine{
     };
     
     getTimer(){
-        return this.s_gameTimer;
+        return s_gameTimer;
     }
     //info:
     //-1 = falid
@@ -221,4 +222,4 @@ class GameEngine{
     }
 }
 
-export {GameEngine};
+export {GameEngine,s_gameTimer};

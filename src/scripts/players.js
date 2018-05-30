@@ -2,7 +2,7 @@
 import {Player} from './player';
 
 var NUM_OF_CHANGE_COLOR_CARD = 4;
-var NUM_OF_STARTING_CARDS = 2;
+var NUM_OF_STARTING_CARDS = 8;
 
 function Players() {
 
