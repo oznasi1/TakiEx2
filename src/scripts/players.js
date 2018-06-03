@@ -48,22 +48,12 @@ class Players {
         }
         // newPlayer.init(gameEngine, pile);
         newPlayer.init();
-        if(playerType === "bot"){
+        if (playerType === "bot") {
             newPlayer.startYourTurn = this.botLogic.startYourTurnFunc.bind(newPlayer);   //startYourTurnFunc.call(newPlayer);
             newPlayer.endYourTurn = this.botLogic.endYourTurnFunc.bind(newPlayer);
         }
         this.Players.push(newPlayer);
     }
-    // createPlayer(gameEngine, pile, deck, playerType) {
-    //     let newPlayer = new Player(playerType);
-    //
-    //     for (let i = 0; i < NUM_OF_STARTING_CARDS; i++) {
-    //         let lastCard = deck.getTopCardFromDeck();
-    //         newPlayer.addCard(lastCard);
-    //     }
-    //     newPlayer.init(gameEngine, pile);
-    //     this.Players.push(newPlayer);
-    // }
 
     getPlayersList() {
         return this.Players;

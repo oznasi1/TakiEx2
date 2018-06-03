@@ -112,7 +112,7 @@ export class BotLogic {
 
     startYourTurnFunc() {
         if (!this.Playing) {
-            setTimeout(() => g_StartTurnImpl(this), 1000);
+            setTimeout(() => g_StartTurnImpl(this), 500);
         }
     }
 

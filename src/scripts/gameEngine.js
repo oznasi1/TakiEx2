@@ -85,6 +85,25 @@ class GameEngine {
         return result;
     }
 
+    hasOnlyOneMoreCard(i_CurrPlayer) {
+        let validCardsCounter = 0;
+        let playerCards = i_CurrPlayer.getCards();
+        let pileColor = this.Pile.getTopCardColor();
+        let pileId = this.Pile.getTopCardId();
+
+
+        for (let i = 0; i < playerCards.length; i++) {
+            if (playerCards[i].getId() === pileId ||
+                playerCards[i].getColor() === pileColor ||
+                playerCards[i].getId() === "change_colorful" ||
+                (playerCards[i].getId() === "taki_colorful" && pileColor !== null)) {
+                validCardsCounter++;
+            }
+        }
+
+        return validCardsCounter === 1;
+    }
+
     Deck_OnClick(event) {
 
         if (this.Running) {
@@ -145,7 +164,9 @@ class GameEngine {
         this.startTurn(i_CardIndex);
         this.endTurn();
         this.update(); //deck cards = 1 =>> shffle + check winner losser
-        this.Players.startTurn();
+        if (this.Running) {
+            this.Players.startTurn();
+        }
     };
 
     update() {
@@ -247,19 +268,38 @@ class GameEngine {
                 break;
 
             case eGameState["taki"]:
-                if (!this.hasMoreCards(this.Players.getCurrentPlayer())) // run out of Cards in the same color
-                {
-                    this.ActionManager.setDefaultState();
-                    this.Players.nextPlayerTurn();
-                    //this.UI.Render(this.Deck, this.Pile, this.Players);
-                    updateByRef(showError, showColorPicker, endGame);
-                }
-                else {
+                // if (!this.hasMoreCards(this.Players.getCurrentPlayer())) // run out of Cards in the same color
+                // {
+                //     // this.ActionManager.setDefaultState();
+                //     let isCurrPlayerGetExtraTurn = this.ActionManager.isExtraTurnCard(this.Pile.getTopCard());
+                //     this.ActionManager.changeStateByCard(this.Pile.getTopCard());        //change state according to the top pile card
+                //     if (isCurrPlayerGetExtraTurn) { //the game state is determine by the last card.
+                //         this.Players.getCurrentPlayer().setPlayingToFalse(); //extra turn
+                //     }
+                //     else {
+                //         this.Players.nextPlayerTurn();
+                //     }
+                //     //this.UI.Render(this.Deck, this.Pile, this.Players);
+                //     updateByRef(showError, showColorPicker, endGame);
+                // }
+                // else {
+                //     this.Players.getCurrentPlayer().setPlayingToFalse();
+                //     //this.UI.Render(this.Deck, this.Pile, this.Players);
+                //     updateByRef(showError, showColorPicker, endGame);
+                // }
+                if (this.hasMoreCards(this.Players.getCurrentPlayer())) {
                     this.Players.getCurrentPlayer().setPlayingToFalse();
                     //this.UI.Render(this.Deck, this.Pile, this.Players);
-                    updateByRef(showError, showColorPicker, endGame);
+                    // updateByRef(showError, showColorPicker, endGame);
+                    if (this.hasOnlyOneMoreCard(this.Players.getCurrentPlayer())) {
+                        this.ActionManager.setDefaultState();
+                    }
                 }
-
+                else {   //has no more card to add to the pile
+                    this.ActionManager.setDefaultState();
+                    this.Players.nextPlayerTurn();
+                }
+                updateByRef(showError, showColorPicker, endGame);
                 break;
 
             case eGameState["stop"]:

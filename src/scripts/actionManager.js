@@ -5,7 +5,8 @@ let eGameState = {
     "stop": 3,
     "plus": 4,
     "2plus": 5,
-    "taki_colorful": 6};
+    "taki_colorful": 6
+};
 
 let NO_COLOR = null;
 
@@ -39,6 +40,8 @@ class ActionManager {
     checkValidCard(i_Card) {
 
         return (this.Pile.getTopCardColor() === NO_COLOR && i_Card.getId() !== "taki_colorful" || //if pile color = no color --> can't use taki colorful
+            this.Pile.getTopCardColor() !== NO_COLOR && i_Card.getId() === "taki_colorful" ||
+            (i_Card.getId() === "taki" && this.Pile.getTopCardId() === "taki_colorful") ||
             i_Card.getColor() === this.Pile.getTopCardColor() ||
             i_Card.getId() === this.Pile.getTopCardId() ||
             i_Card.getId() === "change_colorful");
@@ -49,17 +52,16 @@ class ActionManager {
         this.isValidCard = (i_Card.getColor() === this.TakiColor || i_Card.getId() === "taki_colorful");//|| (this.Pile.getTopCardId() === "taki" && i_Card.getId() === "taki"));
 
         if (this.isValidCard) {
-
-            // if (i_Card.getId() === "taki") {
-            //     this.TakiColor = i_Card.getColor();
-            // }
             if (i_Card.getId() === "taki_colorful") {
                 let topPileColor = this.Pile.getTopCardColor();
-                i_Card.setColor(topPileColor); //todo: Amit1
+                i_Card.setColor(topPileColor);
+                this.Pile.addCard(i_Card);
                 i_Card.setAttributes("card_taki_" + topPileColor);
             }
+            else {
+                this.Pile.addCard(i_Card);
+            }
 
-            this.Pile.addCard(i_Card);
             i_CurrPlayer.removeCard(i_Card);
         }
     };
@@ -90,13 +92,17 @@ class ActionManager {
                 }
                 else if (this.gameState === eGameState["taki_colorful"]) {
                     this.TakiColor = this.Pile.getTopCardColor();
-                    i_Card.setColor(this.Pile.getTopCardColor()); //todo: Amit1
-                    i_Card.setAttributes("card_taki_" + this.TakiColor);
-                    this.gameState = eGameState["taki"];
+                    i_Card.setColor(this.TakiColor);
                 }
             }
 
             this.Pile.addCard(i_Card);
+
+            if(this.gameState === eGameState["taki_colorful"]){
+                this.gameState = eGameState["taki"];
+                i_Card.setAttributes("card_taki_" + this.TakiColor);
+            }
+
             i_CurrPlayer.removeCard(i_Card);
         }
 
@@ -115,13 +121,28 @@ class ActionManager {
         return result;
     }
 
+    changeStateByCard(i_Card){
+        this.gameState = eGameState["normal"];
+        this.isValidCard = true;
+        this.isActionCard = ActionManager.isActionCardFunc(i_Card);
+        if(this.isActionCard){
+
+            if(i_Card.getId() !== "taki" && i_Card.getId() !== "taki_colorful"){
+                this.gameState = eGameState[i_Card.getId()];
+            }
+        }
+        else{
+
+        }
+    }
+
     setDefaultState() {
         this.gameState = eGameState["normal"];
         this.isValidCard = true;
         this.isActionCard = false;
     }
 
-    static GetGameState(){
+    static GetGameState() {
         return this.gameState;
     }
 

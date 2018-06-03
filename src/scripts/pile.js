@@ -1,47 +1,50 @@
-
 import {Card} from './card';
 
-function Pile() {
+class Pile {
+    constructor() {
+        this.Cards = [];
+        this.Color = null;
+        this.CardId = null;
+    }
 
-    this.Cards = [];
-    this.Color = null;
-    this.CardId = null;
-
-    this.init = function (i_Deck) {
-        var card = i_Deck.getTopCardFromDeck();
+    init(i_Deck) {
+        let card = i_Deck.getTopCardFromDeck();
         this.addCard(card);
-    };
+    }
 
-    this.addCard = function (i_Card) {
+    addCard(i_Card) {
         i_Card.makeCardFaceUp();
         this.Cards.push(i_Card);
         this.Color = i_Card.getColor();
         this.CardId = i_Card.getId();
-    };
+    }
 
-    this.getTopCardFromPile = function () {
+    getTopCardFromPile() {
         return this.Cards[this.Cards.length - 1];
-    };
+    }
 
-    this.getTopCardId = function () {
+    getTopCardId() {
         return this.CardId;
-    };
+    }
 
-    this.setTopCardId = function (i_NewCardId) {
-
+    setTopCardId(i_NewCardId) {
         this.CardId = i_NewCardId;
-    };
+    }
 
-    this.getTopCardColor = function () {
+    getTopCardColor() {
         return this.Color;
-    };
+    }
 
-    this.setTopCardColor = function (i_NewColor) {
+    setTopCardColor(i_NewColor) {
         this.Color = i_NewColor;
-    };
+    }
 
-    this.getCards = function () {
+    getCards() {
         return this.Cards;
+    }
+
+    getTopCard() {
+        return this.Cards[this.Cards.length - 1];
     }
 
 }

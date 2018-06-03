@@ -46,6 +46,7 @@ export class Deck {
             let takiColorfulID = cardID[cardID.length - 2];
             let cardAttribute = "card_" + takiColorfulID;
             let card = new Card(NO_COLOR, takiColorfulID, cardAttribute, true);//SUPER_TAKI
+            this.Cards.push(card);
         }
     }
 
@@ -62,6 +63,10 @@ export class Deck {
                 card.setColor(NO_COLOR);
                 card.setAttribute("card_change_colorful");
             }
+            if(card.getId() === "taki_colorful"){
+                card.setColor(NO_COLOR);
+                card.setAttribute("card_taki_colorful");
+            }
         }
 
         this.shuffle();
@@ -77,7 +82,7 @@ export class Deck {
     };
 
     getTopCardFromDeck() {
-        let card = this.Cards.pop(); //todo: Amit Test
+        let card = this.Cards.pop(); //todo: Amit Test *************************************************
         card.makeCardFaceUp();
         return card;
     };
