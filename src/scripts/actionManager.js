@@ -1,95 +1,135 @@
-var eGameState = { "normal": 0, "change_colorful": 1, "taki": 2, "stop": 3 };
-var NO_COLOR = null;
+let eGameState = {
+    "normal": 0,
+    "change_colorful": 1,
+    "taki": 2,
+    "stop": 3,
+    "plus": 4,
+    "2plus": 5,
+    "taki_colorful": 6};
 
-function ActionManager(i_Pile) {
+let NO_COLOR = null;
 
-    this.Pile = i_Pile;
-    this.gameState = null;
-    this.isValidCard = null;
-    this.isActionCard = null;
-    this.TakiColor = null;
+class ActionManager {
 
-    this.init = function () {
+    constructor(i_Pile) {
+        this.Pile = i_Pile;
+        this.gameState = null;
+        this.isValidCard = null;
+        this.isActionCard = null;
+        this.TakiColor = null;
+    }
 
+    init() {
         this.gameState = eGameState["normal"];
         this.isValidCard = false;
         this.isActionCard = false;
     };
 
-    function isActionCardFunc(i_Card) {
+    static isActionCardFunc(i_Card) {
 
-        return (i_Card.getId() === "change_colorful" || i_Card.getId() === "taki" || i_Card.getId() === "stop");
-    };
+        return (i_Card.getId() === "change_colorful" ||
+            i_Card.getId() === "taki" ||
+            i_Card.getId() === "stop" ||
+            i_Card.getId() === "plus" ||
+            i_Card.getId() === "2plus" ||
+            i_Card.getId() === "taki_colorful"
+        );
+    }
 
-    this.checkValidCard = function (i_Card) {
+    checkValidCard(i_Card) {
 
-        return (this.Pile.getTopCardColor() === NO_COLOR ||
+        return (this.Pile.getTopCardColor() === NO_COLOR && i_Card.getId() !== "taki_colorful" || //if pile color = no color --> can't use taki colorful
             i_Card.getColor() === this.Pile.getTopCardColor() ||
             i_Card.getId() === this.Pile.getTopCardId() ||
             i_Card.getId() === "change_colorful");
+    }
+
+    AddCardToPileWhenTaki(i_CurrPlayer, i_Card) {
+
+        this.isValidCard = (i_Card.getColor() === this.TakiColor || i_Card.getId() === "taki_colorful");//|| (this.Pile.getTopCardId() === "taki" && i_Card.getId() === "taki"));
+
+        if (this.isValidCard) {
+
+            // if (i_Card.getId() === "taki") {
+            //     this.TakiColor = i_Card.getColor();
+            // }
+            if (i_Card.getId() === "taki_colorful") {
+                let topPileColor = this.Pile.getTopCardColor();
+                i_Card.setColor(topPileColor); //todo: Amit1
+                i_Card.setAttributes("card_taki_" + topPileColor);
+            }
+
+            this.Pile.addCard(i_Card);
+            i_CurrPlayer.removeCard(i_Card);
+        }
     };
 
-    this.AddCardToPileWhenTaki = function (i_CurrPlayer, i_Card) {
-
-        this.isValidCard = (i_Card.getColor() === this.TakiColor || (this.Pile.getTopCardId() === "taki" && i_Card.getId() === "taki"));
+    AddCardToPileWhen2Plus(i_CurrPlayer, i_Card) {
+        this.isValidCard = i_Card.getId() === "2plus";
 
         if (this.isValidCard) {
 
             this.Pile.addCard(i_Card);
             i_CurrPlayer.removeCard(i_Card);
-
-            if (i_Card.getId() === "taki") {
-                this.TakiColor = i_Card.getColor();
-            }
         }
-    };
+    }
 
 
-    this.AddCardToPile = function (i_CurrPlayer, i_Card) {
+    AddCardToPile(i_CurrPlayer, i_Card) {
 
         this.isValidCard = this.checkValidCard(i_Card);
-        if (this.isValidCard)
-        {
-            this.Pile.addCard(i_Card);
-            i_CurrPlayer.removeCard(i_Card);
+        if (this.isValidCard) {
 
-            this.isActionCard = isActionCardFunc(i_Card);
-            if (this.isActionCard)
-            {
+            this.isActionCard = ActionManager.isActionCardFunc(i_Card);
+            if (this.isActionCard) {
+
                 this.gameState = eGameState[i_Card.getId()];
-                if (this.gameState === eGameState["taki"])
-                {
+
+                if (this.gameState === eGameState["taki"]) {
                     this.TakiColor = i_Card.getColor();
                 }
+                else if (this.gameState === eGameState["taki_colorful"]) {
+                    this.TakiColor = this.Pile.getTopCardColor();
+                    i_Card.setColor(this.Pile.getTopCardColor()); //todo: Amit1
+                    i_Card.setAttributes("card_taki_" + this.TakiColor);
+                    this.gameState = eGameState["taki"];
+                }
+            }
+
+            this.Pile.addCard(i_Card);
+            i_CurrPlayer.removeCard(i_Card);
+        }
+
+    }
+
+    getTurnResult() {
+        let result = -1; //not added sign
+
+        if (this.isValidCard) {
+            result = eGameState["normal"];
+            if (this.isActionCard) {
+                result = this.gameState;
             }
         }
+
+        return result;
     }
 
-
-this.getTurnResult = function () {
-    var result = -1; //not added sign
-
-    if (this.isValidCard) {
-        result = eGameState["normal"];
-        if (this.isActionCard) {
-            result = this.gameState;
-        }
+    setDefaultState() {
+        this.gameState = eGameState["normal"];
+        this.isValidCard = true;
+        this.isActionCard = false;
     }
 
-    return result;
-};
+    static GetGameState(){
+        return this.gameState;
+    }
+
+    getCurrentGameState() {
+        return this.gameState;
+    }
+
+}//Action Manager
 
 
-this.setDefaultState = function () {
-    this.gameState = eGameState["normal"];
-    this.isValidCard = true;
-    this.isActionCard = false;
-};
-
-this.getCurrentGameState = function () {
-    return this.gameState;
-};
-}
-
-
-export {ActionManager};
+export {ActionManager, eGameState};

@@ -135,7 +135,9 @@ class Player extends React.Component{
                 cardsElems.push(<CardRC id={i} key={i} arrributes={`${cardAttributes} overLapCard`} style={cardStyle} onClick={this.handlePlayerClick}/>);
             }
             else{
-                cardsElems.push(<CardRC id={i} key={i} arrributes={`card card_back overLapCard`} style={cardStyle}/>);
+                // cardsElems.push(<CardRC id={i} key={i} arrributes={`card card_back overLapCard`} style={cardStyle}/>);
+ //**************** todo: Amit testing delete!!!**************************************************************************//
+                cardsElems.push(<CardRC id={i} key={i} arrributes={`${cardAttributes} overLapCard`} style={cardStyle}/>);
             }
          }
 
