@@ -108,7 +108,6 @@ const NUM_OF_BOT = 1;
     function initGameEngine(){
         engine = new GameEngine();
         engine.initEngine(null,NUM_OF_HUMAN,NUM_OF_BOT);
-        //updateByRef(false,false,false);
     }
 
     function init (gameRef){
