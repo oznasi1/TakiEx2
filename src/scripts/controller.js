@@ -1,7 +1,5 @@
 
-
 import {GameEngine} from "./gameEngine.js";
-import {s_gameTimer} from "./gameEngine.js";
 
 const NUM_OF_HUMAN = 1;
 const NUM_OF_BOT = 1;
@@ -15,6 +13,7 @@ const NUM_OF_BOT = 1;
 
     function cleanStateArray(){
         stateArr=[];
+        currentIndex=-1;
     }
 
     function prevWasClicked(index){
@@ -52,14 +51,17 @@ const NUM_OF_BOT = 1;
         let newState={};
         currentIndex++;
         let newIndex=currentIndex;
+        let currentPlayerIndex;
         Object.assign(newDeck,engine.Deck.Cards);
         Object.assign(newBotCards,engine.Players.getPlayersList()[1].Cards);
         Object.assign(newPlayerCards,engine.Players.getPlayersList()[0].Cards);
         Object.assign(newPile,engine.Pile.Cards);
+
+        currentPlayerIndex = engine.Players.getCurrentPlayerIndex();
         newStats={
-           numOfTurs:engine.Players.getPlayersList()[0].Stats.getNumOfTurns(), 
-           avgTime:engine.Players.getPlayersList()[0].Stats.getAvgPlayTime(),
-           lastCardCount:engine.Players.getPlayersList()[0].Stats.getNumOfOneCard(),
+           numOfTurs:engine.Players.getPlayersList()[currentPlayerIndex].Stats.getNumOfTurns(), 
+           avgTime:engine.Players.getPlayersList()[currentPlayerIndex].Stats.getAvgPlayTime(),
+           lastCardCount:engine.Players.getPlayersList()[currentPlayerIndex].Stats.getNumOfOneCard(),
                 } 
         if(newEndGame){ // if we got this flag that found the winner
             newBotStats={
@@ -68,13 +70,14 @@ const NUM_OF_BOT = 1;
                     lastCardCount:engine.Players.getPlayersList()[1].Stats.getNumOfOneCard(),
                     } 
             newWinLose={
-               timer:s_gameTimer,
+               timer:GameEngine.getTimer(), //s_gameTimer return by static function in GameEngine called getTimer()
                winnerIndex:engine.checkForWinner(),
                botStats:newBotStats,
             }
         }
 
         newState={
+            playerIndex:currentPlayerIndex,
             stateIndex:newIndex,
             deck: newDeck,
             pile: newPile,
@@ -87,7 +90,9 @@ const NUM_OF_BOT = 1;
             winLose:newWinLose,
             isRepaly:false}
 
-        stateArr.push(newState);
+        if((!newShowColorPicker&&!newShowError) ||newEndGame){// saving all moves exept error and the picking color action   
+            stateArr.push(newState);
+        }  
 
         listener.setState(newState);
 
