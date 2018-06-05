@@ -150,6 +150,7 @@ class Player {
         if (this.PlayerId === "human") {
             card.makeCardFaceUp();
         }
+        else(card.makeCardFaceDown());
 
         this.Cards.push(card);
     }

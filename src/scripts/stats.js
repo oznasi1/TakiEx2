@@ -5,7 +5,7 @@ function Stats() {
     this.NumOfOneCardOnly = 0;
     this.NumOfTurns = 0;
     var s_TimePlaying = 0; // your turn only
-    this.IntervalTimerId;
+    this.IntervalTimerId=0;
 
     this.timePlayingCounter = function() {
         s_TimePlaying += 1;
@@ -45,6 +45,10 @@ function Stats() {
         if(isNaN(this.AvgPlayingTimePerTurn))
         {
             this.AvgPlayingTimePerTurn=0;
+        }
+        else if(this.NumOfTurns==0) // avoid infinity
+        {
+            return 0;
         }
         return this.AvgPlayingTimePerTurn.toFixed(1);
     };
