@@ -187,10 +187,10 @@ class PileRC extends React.Component {
 
         var cardsElems = [];
         for (var i = 0; i < this.props.cards.length; i++) {
-            let top = Math.floor(Math.random() * (i * 3 - 0 + 1)) + 0;
-            let left = Math.floor(Math.random() * (i * 3 - 0 + 1)) + 0;
-            let right = Math.floor(Math.random() * (i * 3 - 0 + 1)) + 0;
-            let bottom = Math.floor(Math.random() * (i * 3 - 0 + 1)) + 0;
+            let top = i*2;
+            let left = i*2;
+            let right = i*2;
+            let bottom = i*2;
             let angle = Math.floor(Math.random() * (360 / i - 0 + 1)) + 0;
             var cardStyle = {
                 transform: `rotate(${angle}deg)`,

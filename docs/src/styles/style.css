@@ -250,36 +250,7 @@ body
     background-size: 100% 100%;
   }
 
-  
 
-  /*
-  #botTurn{
-    margin-top: 3%;
-    margin-left: 7%;
-    width: 85%;
-    height: 25%;
-    background-color: rgb(15, 214, 81);
-    border-top-left-radius: 0;
-    border-top-right-radius: 0;
-    border-bottom-left-radius:50% 100%;
-    border-bottom-right-radius: 50% 100%;
-  }*/
-
-  /*
-  #playerTurn{
-    position: absolute;
-    margin-top: 49.5%;
-    margin-left: 7%;
-    width: 85%;
-    height: 25%;
-    
-    background-color: rgb(15, 214, 81);
-    border-top-left-radius: 50% 100%;
-    border-top-right-radius: 50% 100%;
-    border-bottom-left-radius:0;
-    border-bottom-right-radius: 0;
-  }
-*/
 
   #deck > .card:hover{
       cursor: pointer;
@@ -289,7 +260,7 @@ body
   #deck  {
     position: absolute;
     height: 190px;
-    width: 130px;
+    width: 150px;
     top: 40%;
     right: 15%;
   }

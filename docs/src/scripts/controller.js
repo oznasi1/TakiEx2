@@ -31,7 +31,7 @@ const NUM_OF_BOT = 1;
 
     function nextWasClicked(index){
         let newState={};
-        currentIndex=(++index)%stateArr.length;
+        currentIndex=(++index)%(stateArr.length);
         Object.assign(newState,stateArr[currentIndex]);
         listener.setState(newState);
     }
@@ -49,8 +49,7 @@ const NUM_OF_BOT = 1;
         let newBotStats={};
         let newWinLose={};
         let newState={};
-        currentIndex++;
-        let newIndex=currentIndex;
+        let newIndex;
         let currentPlayerIndex;
         Object.assign(newDeck,engine.Deck.Cards);
         Object.assign(newBotCards,engine.Players.getPlayersList()[1].Cards);
@@ -91,6 +90,9 @@ const NUM_OF_BOT = 1;
             isRepaly:false}
 
         if((!newShowColorPicker&&!newShowError) ||newEndGame){// saving all moves exept error and the picking color action   
+            currentIndex++;
+            newIndex=currentIndex;
+            newState.stateIndex = newIndex;
             stateArr.push(newState);
         }  
 
