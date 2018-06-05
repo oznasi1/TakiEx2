@@ -33,6 +33,7 @@ export class Deck {
 
                 this.Cards.push(card1);
                 this.Cards.push(card2);
+
             }
         }
         for (let i = 0; i < NUM_OF_CHANGE_COLOR_CARD; i++) {
@@ -53,23 +54,30 @@ export class Deck {
     createDeckFromPile(i_Cards) {
 
         this.Cards = i_Cards;
+        let topPileCard = this.Cards.pop(); //we need to save top pile card
+
+        if (this.Cards.length === 0) { //if there is no more cards in deck&pile only the top card in pile
+            this.NumOfCardToDraw = 1;
+            return topPileCard;
+        }
 
         //make all the cards face down
-        for (let i = 0; i < this.Cards.length; i++) {
+        for (let i = 0; i < this.Cards.length; i++) { //-1 ==> we don't touch the last card
 
-            let card = this.Cards[i].makeCardFaceDown();
+            this.Cards[i].makeCardFaceDown();
+            let card = this.Cards[i];
 
             if (card.getId() === "change_colorful") {
                 card.setColor(NO_COLOR);
-                card.setAttribute("card_change_colorful");
+                card.setAttributes("card_change_colorful");
             }
-            if(card.getId() === "taki_colorful"){
+            if (card.getId() === "taki_colorful") {
                 card.setColor(NO_COLOR);
-                card.setAttribute("card_taki_colorful");
+                card.setAttributes("card_taki_colorful");
             }
         }
-
         this.shuffle();
+        return topPileCard; //return the last card
     };
 
     shuffle() {
@@ -93,7 +101,9 @@ export class Deck {
 
     getNumberOfCardToDraw() {
         let numToReturn = this.NumOfCardToDraw;
-        this.NumOfCardToDraw = 1;
+        if (this.NumOfCardToDraw > 1) {
+            this.NumOfCardToDraw -= 1;
+        }
         return numToReturn;
     }
 

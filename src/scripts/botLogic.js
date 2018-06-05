@@ -216,7 +216,8 @@ export class BotLogic {
                 for (let i = 0; i < botCards.length; i++) {
                     if (i_CardType === botCards[i].getId()) {
                         if (botCards[i].getColor() === g_Pile.getTopCardColor() ||
-                        botCards[i].getId() === g_Pile.getTopCardId()) {
+                        botCards[i].getId() === g_Pile.getTopCardId() ||
+                        botCards[i].getId() === "taki" && g_Pile.getTopCardId() === "taki_colorful") {
                             return i;
                         }
                     }

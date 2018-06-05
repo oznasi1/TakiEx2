@@ -75,7 +75,8 @@ class GameEngine {
                 if (playerCards[i].getId() === pileId ||
                     playerCards[i].getColor() === pileColor ||
                     playerCards[i].getId() === "change_colorful" ||
-                    (playerCards[i].getId() === "taki_colorful" && pileColor !== null)) {
+                    (playerCards[i].getId() === "taki_colorful" && pileColor !== null) ||
+                    (playerCards[i].getId() === "taki" && pileId === "taki_colorful")) {
                     result = true;
                     break;
                 }
@@ -85,18 +86,17 @@ class GameEngine {
         return result;
     }
 
-    hasOnlyOneMoreCard(i_CurrPlayer) {
+    hasOnlyOneMoreCardForTaki(i_CurrPlayer) {
         let validCardsCounter = 0;
         let playerCards = i_CurrPlayer.getCards();
         let pileColor = this.Pile.getTopCardColor();
-        let pileId = this.Pile.getTopCardId();
-
+        // let pileId = this.Pile.getTopCardId();
 
         for (let i = 0; i < playerCards.length; i++) {
-            if (playerCards[i].getId() === pileId ||
-                playerCards[i].getColor() === pileColor ||
-                playerCards[i].getId() === "change_colorful" ||
-                (playerCards[i].getId() === "taki_colorful" && pileColor !== null)) {
+            if (playerCards[i].getColor() === pileColor) {// ||
+                //playerCards[i].getId() === pileId) ||
+                // playerCards[i].getId() === "change_colorful" ||
+                //(playerCards[i].getId() === "taki_colorful" && pileColor !== null)) {
                 validCardsCounter++;
             }
         }
@@ -110,12 +110,13 @@ class GameEngine {
             let isNoMoreOptionsToPlay = !this.hasMoreOptions(this.Players.getCurrentPlayer());
             if (isNoMoreOptionsToPlay) {
                 this.DeckClick();
-
-                let isDeckEmpty = (this.Deck.Cards.length === 0);
-                if (isDeckEmpty) {
-                    let pileCards = this.Pile.getCards();
-                    this.Deck.createDeckFromPile(pileCards);
-                }
+                //
+                // let isDeckEmpty = (this.Deck.Cards.length <= 1);
+                // if (isDeckEmpty) {
+                //     let pileCards = this.Pile.getCards();
+                //     this.Pile.Cards = [];
+                //     this.Pile.addCard(this.Deck.createDeckFromPile(pileCards));
+                // }
             }
             else {
                 updateByRef(true, false, false); //show error pop-up cuz there is still possible moves to play
@@ -126,12 +127,31 @@ class GameEngine {
     DeckClick() {
 
         let currPlayer = this.Players.getCurrentPlayer();
-        let numOfCardToDrawFromDeck = this.Deck.getNumberOfCardToDraw();
-
-        for (let i = 0; i < numOfCardToDrawFromDeck; i++) {
-            let cardFromDeck = this.Deck.getTopCardFromDeck();
-            currPlayer.addCard(cardFromDeck);
+        // let numOfCardToDrawFromDeck = this.Deck.getNumberOfCardToDraw()
+        do { //get Cards from deck according to deck num of card to draw
+            if (this.Deck.Cards.length === 0) { //if deck is empty
+                let pileCards = this.Pile.getCards();
+                this.Pile.Cards = [];
+                this.Pile.addCard(this.Deck.createDeckFromPile(pileCards));
+            }
+            if (this.Deck.Cards.length > 0) {
+                let cardFromDeck = this.Deck.getTopCardFromDeck();
+                currPlayer.addCard(cardFromDeck);
+            }
         }
+        while (this.Deck.getNumberOfCardToDraw() > 1);
+        // for (let i = 0; i < numOfCardToDrawFromDeck; i++) {
+        //     let cardFromDeck = this.Deck.getTopCardFromDeck();
+        //     currPlayer.addCard(cardFromDeck);
+        // }
+        //
+        // let isDeckEmpty = (this.Deck.Cards.length <= 1);
+        // if (isDeckEmpty) {
+        //     let pileCards = this.Pile.getCards();
+        //     this.Pile.Cards = [];
+        //     this.Pile.addCard(this.Deck.createDeckFromPile(pileCards));
+        // }
+
         this.ActionManager.setDefaultState();
         this.Players.nextPlayerTurn();
         //this.UI.Render(this.Deck, this.Pile, this.Players);
@@ -291,7 +311,7 @@ class GameEngine {
                     this.Players.getCurrentPlayer().setPlayingToFalse();
                     //this.UI.Render(this.Deck, this.Pile, this.Players);
                     // updateByRef(showError, showColorPicker, endGame);
-                    if (this.hasOnlyOneMoreCard(this.Players.getCurrentPlayer())) {
+                    if (this.hasOnlyOneMoreCardForTaki(this.Players.getCurrentPlayer())) {
                         this.ActionManager.setDefaultState();
                     }
                 }
@@ -305,9 +325,10 @@ class GameEngine {
             case eGameState["stop"]:
                 this.Players.nextPlayerTurn();
                 //this.UI.Render(this.Deck, this.Pile, this.Players);
-                updateByRef(showError, showColorPicker, endGame);
+                // updateByRef(showError, showColorPicker, endGame);
                 this.Players.nextPlayerTurn();
                 this.ActionManager.setDefaultState();
+                updateByRef(showError, showColorPicker, endGame);
                 break;
             case eGameState["plus"]:
                 this.Players.getCurrentPlayer().setPlayingToFalse();

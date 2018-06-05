@@ -42,7 +42,7 @@ class ActionManager {
         return (this.Pile.getTopCardColor() === NO_COLOR && i_Card.getId() !== "taki_colorful" || //if pile color = no color --> can't use taki colorful
             this.Pile.getTopCardColor() !== NO_COLOR && i_Card.getId() === "taki_colorful" ||
             (i_Card.getId() === "taki" && this.Pile.getTopCardId() === "taki_colorful") ||
-            i_Card.getColor() === this.Pile.getTopCardColor() ||
+            i_Card.getColor() !== NO_COLOR && this.Pile.getTopCardColor() !== NO_COLOR && i_Card.getColor() === this.Pile.getTopCardColor()||
             i_Card.getId() === this.Pile.getTopCardId() ||
             i_Card.getId() === "change_colorful");
     }
