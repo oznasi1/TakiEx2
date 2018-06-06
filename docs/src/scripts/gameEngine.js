@@ -202,6 +202,14 @@ class GameEngine {
         }
     };
 
+    onQuitClick(){
+        let winnerIndex = 1; //bot
+        let showError = false;
+            let showColorPicker = false;
+            let endGame = true;
+            updateByRef(showError, showColorPicker, endGame);
+    }
+
     checkForWinner() {
 
         let winnerIndex = null;

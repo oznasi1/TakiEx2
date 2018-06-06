@@ -54,6 +54,8 @@ body
     width:auto;
     max-width:35%;
     max-height:35%;
+    cursor: pointer;
+
 }
 #youLostOrWon{
     font-size: -webkit-xxx-large;
@@ -79,6 +81,24 @@ body
     text-decoration: none;
     text-shadow: rgb(255, 255, 255) 0px 1px 0px;
 }
+
+#quit{
+  box-shadow: rgb(28, 27, 24) 0px 1px 0px 0px;
+  background: linear-gradient(rgb(234, 224, 194) 5%, rgb(204, 194, 166) 100%) rgb(234, 224, 194);
+  border-radius: 15px;
+  border: 2px solid rgb(51, 48, 41);
+  display: inline-block;
+  cursor: pointer;
+  color: rgb(80, 87, 57);
+  height: 35px;
+  font-family: Arial;
+  font-size: 14px;
+  font-weight: bold;
+  padding: 8px 16px;
+  text-decoration: none;
+  text-shadow: rgb(255, 255, 255) 0px 1px 0px;
+}
+
 #replay{
   box-shadow: rgb(28, 27, 24) 0px 1px 0px 0px;
   background: linear-gradient(rgb(234, 224, 194) 5%, rgb(204, 194, 166) 100%) rgb(234, 224, 194);
@@ -323,6 +343,8 @@ body
   width:auto;
   max-width:20%;
   max-height:20%;
+  cursor: pointer;
+
 }
 
 #player > .card:hover { /*going to id player , and to all childs with class card do this*/

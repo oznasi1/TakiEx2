@@ -221,7 +221,8 @@ class Game extends React.Component { //contains all - players,deck,pile,stats
         this.handleNextClick = this.handleNextClick.bind(this);
         this.handleReplay = this.handleReplay.bind(this);
         this.handleRestart = this.handleRestart.bind(this);
-
+        this.handleQuitClick = this.handleQuitClick.bind(this);
+    
 
         this.state = {
             playerIndex:0,
@@ -245,6 +246,10 @@ class Game extends React.Component { //contains all - players,deck,pile,stats
             },
             isReplay: false
         }
+    }
+
+    handleQuitClick(e){
+        engine.onQuitClick(); 
     }
 
     handleRestart(e) {
@@ -284,7 +289,7 @@ class Game extends React.Component { //contains all - players,deck,pile,stats
                 return (
                     <div id="gameWrapper">
                         <div id="prevNextButtons">
-                            <button id="prev" onClick={this.handlePrevClick}>Previos move</button>
+                            <button id="prev" onClick={this.handlePrevClick}>Previous move</button>
                             <button id="next" onClick={this.handleNextClick}>Next move</button>
                             <button id="restart" onClick={this.handleRestart}>Restart</button>
                         </div>
@@ -299,6 +304,7 @@ class Game extends React.Component { //contains all - players,deck,pile,stats
             } else {
                 return (
                     <div id="gameWrapper">
+                        <button id="quit" onClick={this.handleQuitClick}>Quit</button>
                         <Player id="bot" cards={this.state.botCards}/>
                         <DeckRC cards={this.state.deck}/>
                         <PileRC cards={this.state.pile} toShowError={this.state.showError}
